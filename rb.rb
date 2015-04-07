@@ -895,6 +895,7 @@ class SportsScraper
       end
     
       @to_traverse = Array.new()
+      @to_traverse_times = {}
 
     end
 
@@ -2341,6 +2342,107 @@ class SportsScraper
         end
         
 
+
+       ## get the start time of the game
+       ## this is available in game-time-location
+       ## we need the first children
+       ## this will only work on some leagues, through
+       ## this class others need there own
+       ##
+       ## dates look like
+       ## H:i, M D, Y
+       ##
+       startDate = ''
+       time_of_match =  parser.xpath("//div[@class='game-time-location']").first()
+       months = {
+          "January" => 1,
+          "February" => 2,
+          "March" => 3,
+          "April" => 4,
+          "May" => 5,
+          "June" => 6,
+          "July" => 7,
+          "August" => 8,
+          "September" => 9,
+          "October" => 10,
+          "November" => 11,
+          "December" => 12
+       }
+       if time_of_match then
+         puts time_of_match
+         gameTime = time_of_match.children[0].inner_html
+         #startDate = Date.parse(gameTime).strftime("%Y-%M-%d  %H:%i:%s")
+        
+         ## matches 
+         ## 
+         ## 2:00 PM, April 5, 2015
+         ##
+         splitter = gameTime.match(/([\w\d]+):([\d]+).*(AM|PM).*,\s?+([\w]+)\s+?([\d]+),\s+?([\d]+)/)
+         startDateHour = splitter[1].to_i
+         startDateMinutes = splitter[2].to_i 
+         startDateAmOrPm = splitter[3]
+         if startDateAmOrPm == "PM" then
+          startDateHour += 12
+         end
+
+         startDateMonth = months[splitter[4]].to_i
+         startDateDate = splitter[5].to_i
+         startDateYear = splitter[6].to_i
+         ## we don't get seconds however
+         ## put to 0 as it can effect the inputted minutes
+         startDate = DateTime.new(startDateYear, startDateMonth, startDateDate, startDateHour, startDateMinutes, 0, '+7').strftime("%Y-%m-%d %H:%M:%S")
+
+       else
+         ## match other leagues
+         ## here
+
+         if @league == "PGA" then
+          ## PGA gives us:
+          ## Month start-end, year
+          ##
+          ## like:
+          ##
+          ## March 3-4, 2015
+          split = parser.xpath("//*[@class='date']").first()
+          if split then 
+            split = split.inner_html
+            splitter = split.match(/([A-Za-z]+)\s?([\d]{1,2})\-([\d]{1,2}),\s+?([\d]{4})/)
+            startDateYear = splitter[4].to_i
+            startDateMonth = months[splitter[1]].to_i
+            startDateDate = splitter[2].to_i 
+            startDate = DateTime.new(startDateYear, startDateMonth, startDateDate, 0,0,0, '+7').strftime("%Y-%m-%d %H:%M:%S")
+          end
+
+         elsif @league == "NASCAR" then
+           ## NASCAR gives us
+           ## the date/time before we get to the match
+           ## so to_traverse_times
+
+           startDate = @to_traverse_times[pureGameId]
+           
+         elsif @league == "MLS" then
+
+          ## MLS dates look like, 
+          ## date/month/year time
+          ##
+          ## UK format
+        
+          #split = parser.xpath("//div[@class='match-details']")
+          #puts split
+          #split =split.children[2].inner_html 
+          splitter = parser.inner_html.match(/var\s+?d\s+\=\s+new\s+Date\(([\d]+)\)/)
+          
+          unix_time = splitter[1].to_i / 1000
+          puts unix_time
+
+          startDate = Time.at(unix_time).strftime("%Y-%m-%d %H:%M:%S")
+        
+         end
+
+       end
+    
+
+
        ## the priminitive check
        ## is whether this game is current, has been finished
        ## or is in the future
@@ -2646,6 +2748,7 @@ class SportsScraper
         "HomeTeamId" => @home_team_id,
         "AwayTeamId" => @away_team_id,
         "InProgress" => inProgress.to_s,
+        "StartDate" => startDate,
         "players" => players,
         "teams" => teams
       }
@@ -3106,7 +3209,7 @@ class SportsScraper
         "GameTitle" => game['GameTitle'],
         "ModifiedDate" => modifiedDate,
         "CreatedDate" => createdDate,
-        "StartDate" => startDate
+        "StartDate" => game['StartDate'] 
        })
        @db.query(insertStr)
        ##insert the team stats
@@ -3181,12 +3284,57 @@ class SportsScraper
           ## in progress we will
           ## scan
           all.each { |race|
+            ## first column 
+            ##  contains the date time
+            ## for nascar it is needed 
+            time = race.children[0].inner_html.gsub(/\<br\>/, " ")
+            ## datetime should be
+            ## 3 letter date,  3 letter month, year
+            dates = {
+              "Sun" => 1,
+              "Mon" => 2, 
+              "Tue" => 3, 
+              "Wed" => 4,
+              "Thu" => 5,
+              "Fri" => 6,
+              "Sat" => 7
+            }
+            months = {
+              "Jan" => 1,
+              "Feb" => 2,
+              "Mar" => 3,    
+              "Apr" => 4,
+              "May" => 5,
+              "Jun" => 6,
+              "Jul" => 7,
+              "Aug" => 8,
+              "Sep" => 9,
+              "Oct" => 10,
+              "Nov" => 11,
+              "Dec" => 12
+            }
+            
+            y = Time.new().strftime("%Y").to_i  
+            splitter = time.match(/(\w{3}),[^^]{1}?+(\w{3})[^^]{1}+([\d]+):([\d]+)\s+?(AM|PM)/)
+            month = months[splitter[2]].to_i
+            date = dates[splitter[1]].to_i
+            hour = splitter[3].to_i
+            minutes = splitter[4].to_i
+            am_or_pm = splitter[5]
+            if am_or_pm == "PM" then
+              hour += 12
+            end
+            ## where year is always the current year
+            ##
+            dt = DateTime.new(y, month, date, hour, minutes, 0, '-7').strftime("%Y-%M-%d %H:%M:%S")
+
             els = race.children[3]
             els.children.each { |schema|
               if not schema.class.to_s == "Nokogiri::XML::Element" then
                 next
               end
 
+              
               if schema then
                 if schema.inner_html ==  "Race Results" then
       
@@ -3199,6 +3347,7 @@ class SportsScraper
                   ## parse_match
                   link = schema.attr("href").match(/raceId=(.*)$/)
                   @to_traverse.push(link[1])
+                  @to_traverse_times[link[1]] = dt
                 end
                 if schema.inner_html == "Starting Grid" then
                   ## starting grid
@@ -3337,8 +3486,8 @@ end
 
 ## examples you can use as follows
 ##
-## scr = SportsScraper.new("NBA")
-## scr.start()
+scr = SportsScraper.new("NASCAR")
+scr.start()
 ##
 ##
 ##
