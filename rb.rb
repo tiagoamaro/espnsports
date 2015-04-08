@@ -869,7 +869,7 @@ class SportsScraper
       ## 
       @host = "aa16q025m64czad.ccnau5d9vc6f.us-west-2.rds.amazonaws.com"
       @username = "ysportsrdsebs"
-      @pass = "testing112"
+      @pass = "testing122"
       @port = "3306"
       @table = "Statistics"
       @db = Mysql.connect(@host, @username, @pass, @table)
