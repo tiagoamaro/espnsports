@@ -867,11 +867,12 @@ class SportsScraper
       #}
       ## main db connection
       ## 
-      @host = "aa16q025m64czad.ccnau5d9vc6f.us-west-2.rds.amazonaws.com"
-      @username = "ysportsrdsebs"
-      @pass = "testing122"
-      @port = "3306"
-      @table = "Statistics"
+      rails_db_config = Rails.application.config.database_configuration[Rails.env]
+      @host = rails_db_config['host']
+      @username = rails_db_config['username']
+      @pass = rails_db_config['password']
+      @port = rails_db_config['port']
+      @table = rails_db_config['database']
       @db = Mysql.connect(@host, @username, @pass, @table)
 
       @espnSchemas = @entrypoint['espnSchema']

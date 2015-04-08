@@ -1,10 +1,10 @@
 default: &default
   adapter: mysql
-  database: espnsports
-  username: root
-  password: 
-  host: localhost
-  port: 3306
+  database: <%= ENV['DATABASE_NAME'] || 'espnsports' %>
+  username: <%= ENV['DATABASE_USERNAME'] || 'root' %>
+  password: <%= ENV['DATABASE_PASSWORD'] || '' %>
+  host: <%= ENV['DATABASE_HOST'] || 'localhost' %>
+  port: <%= ENV['DATABASE_PORT'] || '3306' %>
 
 development:
   <<: *default
