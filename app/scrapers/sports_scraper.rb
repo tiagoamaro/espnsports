@@ -3486,8 +3486,8 @@ end
 
 ## examples you can use as follows
 ##
-scr = SportsScraper.new("NASCAR")
-scr.start()
+# scr = SportsScraper.new("NASCAR")
+# scr.start()
 ##
 ##
 ##
