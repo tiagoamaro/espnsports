@@ -60,17 +60,10 @@ class DBSyntax
 
     ## get the whole
     ## schema as an arrayq
-    prows = rows.fetch
-    while prows
-      cnt = 0
-      prows.each {  |k|
-        if cnt == 0 then 
-          rows_.push(k)
-        end
-        cnt += 1
-      }
-      prows = rows.fetch
-     end
+
+    while row = rows.fetch_row
+      rows_.push(row)
+    end
 
     return rows_
   end
@@ -912,19 +905,18 @@ class SportsScraper
        game = {}
 
        if query.num_rows > 0 then
-         rows = query.fetch
          schema = @dbsyntax.get_schema(@db, "Games")
          vals = 0
-         while rows
+
+         while row = query.fetch_row
            cnt = 0
-           rows.each { |k, v|
-              if cnt == 0 then 
-                game[schema[vals]] =  k
-                vals += 1
-              end
-           } 
+           row.each do |row_value|
+             if cnt == 0
+               game[schema[vals]] =  row_value
+                 vals += 1
+             end
+           end
            cnt = 0
-          rows = query.fetch
          end
         return game
        end
