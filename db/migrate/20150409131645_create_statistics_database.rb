@@ -1,11 +1,14 @@
 class CreateStatisticsDatabase < ActiveRecord::Migration
-  def up
-    # Reset database
-    execute 'DROP DATABASE IF EXISTS Statistics;'
+  def change
     execute 'CREATE DATABASE IF NOT EXISTS Statistics;'
 
     connection = ActiveRecord::Base.establish_connection('statistics').connection
+
+    # Reset schema migrations
+    connection.drop_table :schema_migrations
     connection.initialize_schema_migrations_table
+
+    connection.execute 'SET FOREIGN_KEY_CHECKS=0;'
 
     # Create tables, indexes and foreign keys
     connection.create_table "Games", primary_key: "GameID", force: :cascade do |t|
@@ -431,9 +434,8 @@ class CreateStatisticsDatabase < ActiveRecord::Migration
     connection.add_foreign_key "TeamStats_Hockey", "Teams", column: "TeamID", primary_key: "TeamID", name: "TeamIDHockeyTeam"
     connection.add_foreign_key "TeamStats_Soccer", "Leagues", column: "LeagueID", primary_key: "LeagueID", name: "LeagueIDSoccerTeam"
     connection.add_foreign_key "TeamStats_Soccer", "Teams", column: "TeamID", primary_key: "TeamID", name: "TeamIDSoccerTeam"
-  end
 
-  def down
-    raise ActiveRecord::IrreversibleMigration
+
+    connection.execute 'SET FOREIGN_KEY_CHECKS=1;'
   end
 end
