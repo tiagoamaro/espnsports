@@ -12,10 +12,3 @@ test:
   <<: *default
 production:
   <<: *default
-
-
-# Database for scrapers
-# So we can use ActiveRecord::Base.estabilish_connection
-statistics:
-  <<: *default
-  database: Statistics
