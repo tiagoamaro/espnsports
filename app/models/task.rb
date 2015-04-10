@@ -15,10 +15,11 @@
 class Task < ActiveRecord::Base
   enum status: { stopped: 0, running: 1 }
 
-  def stop!
-    return if stopped?
+  validates :interval, numericality: { only_integer: true, greater_than: 0 }
 
+  def stop!
     begin
+      update(pid: nil)
       Process.kill(9, pid)
     rescue => exception
       logger.info exception.backtrace
@@ -28,17 +29,17 @@ class Task < ActiveRecord::Base
   end
 
   def run!(league_name = 'NBA')
-    return if running?
-
     process = Spawnling.new(method: :fork) do
       running!
 
-      begin
-        scraper.constantize.new(league_name).start
-      rescue => exception
-        logger.info exception.backtrace
-      ensure
-        stopped!
+      while self.reload.running?
+        begin
+          scraper.constantize.new(league_name).start
+        rescue => exception
+          logger.info exception.backtrace
+        ensure
+          sleep(interval)
+        end
       end
     end
 

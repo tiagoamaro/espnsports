@@ -5,6 +5,7 @@ default: &default
   password: <%= ENV['DATABASE_PASSWORD'] || '' %>
   host: <%= ENV['DATABASE_HOST'] || 'localhost' %>
   port: <%= ENV['DATABASE_PORT'] || '3306' %>
+  reconnect: true
 
 development:
   <<: *default
