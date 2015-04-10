@@ -36,6 +36,7 @@ gem 'jquery-rails'
 
 gem 'mechanize'
 gem 'nokogiri'
+gem 'spawnling'
 
 group :development, :test do
   gem 'annotate', '~> 2.6.6'
