@@ -1,17 +1,7 @@
 class CreateStatisticsDatabase < ActiveRecord::Migration
   def change
-    execute 'CREATE DATABASE IF NOT EXISTS Statistics;'
-
-    connection = ActiveRecord::Base.establish_connection('statistics').connection
-
-    # Reset schema migrations
-    connection.drop_table :schema_migrations
-    connection.initialize_schema_migrations_table
-
-    connection.execute 'SET FOREIGN_KEY_CHECKS=0;'
-
     # Create tables, indexes and foreign keys
-    connection.create_table "Games", primary_key: "GameID", force: :cascade do |t|
+    create_table "Games", primary_key: "GameID", force: :cascade do |t|
       t.integer  "LeagueID",     limit: 11,                    null: false
       t.string   "GameTitle",    limit: 150
       t.integer  "HomeTeamID",   limit: 4
@@ -24,16 +14,16 @@ class CreateStatisticsDatabase < ActiveRecord::Migration
       t.datetime "ModifiedDate",                              null: false
     end
 
-    connection.add_index "games", ["AwayTeamID"], name: "index_matches_on_away_team_id", using: :btree
-    connection.add_index "games", ["HomeTeamID"], name: "index_matches_on_home_team_id", using: :btree
+    add_index "games", ["AwayTeamID"], name: "index_matches_on_away_team_id", using: :btree
+    add_index "games", ["HomeTeamID"], name: "index_matches_on_home_team_id", using: :btree
 
-    connection.create_table "Leagues", primary_key: "LeagueID", force: :cascade do |t|
+    create_table "Leagues", primary_key: "LeagueID", force: :cascade do |t|
       t.string  "LeagueName", limit: 50
       t.integer "SportID",    limit: 1
       t.string  "SportName",  limit: 50
     end
 
-    connection.create_table "PlayerStats_Baseball", id: false, force: :cascade do |t|
+    create_table "PlayerStats_Baseball", id: false, force: :cascade do |t|
       t.integer  "GameID",             limit: 11,             null: false
       t.integer  "LeagueID",           limit: 11,             null: false
       t.integer  "TeamID",             limit: 4,             null: false
@@ -57,12 +47,12 @@ class CreateStatisticsDatabase < ActiveRecord::Migration
       t.datetime "ModifiedDate"
     end
 
-    connection.add_index "playerstats_baseball", ["GameID"], name: "GameID", using: :btree
-    connection.add_index "playerstats_baseball", ["LeagueID"], name: "LeagueID", using: :btree
-    connection.add_index "playerstats_baseball", ["PlayerID"], name: "PlayerID", using: :btree
-    connection.add_index "playerstats_baseball", ["TeamID"], name: "TeamID", using: :btree
+    add_index "playerstats_baseball", ["GameID"], name: "GameID", using: :btree
+    add_index "playerstats_baseball", ["LeagueID"], name: "LeagueID", using: :btree
+    add_index "playerstats_baseball", ["PlayerID"], name: "PlayerID", using: :btree
+    add_index "playerstats_baseball", ["TeamID"], name: "TeamID", using: :btree
 
-    connection.create_table "PlayerStats_Basketball", id: false, force: :cascade do |t|
+    create_table "PlayerStats_Basketball", id: false, force: :cascade do |t|
       t.integer  "GameID",         limit: 11,             null: false
       t.integer  "LeagueID",       limit: 11,             null: false
       t.integer  "TeamID",         limit: 4,             null: false
@@ -88,12 +78,12 @@ class CreateStatisticsDatabase < ActiveRecord::Migration
       t.datetime "ModifiedDate"
     end
 
-    connection.add_index "playerstats_basketball", ["GameID"], name: "GameID", using: :btree
-    connection.add_index "playerstats_basketball", ["LeagueID"], name: "LeagueID", using: :btree
-    connection.add_index "playerstats_basketball", ["PlayerID"], name: "PlayerID", using: :btree
-    connection.add_index "playerstats_basketball", ["TeamID"], name: "TeamID", using: :btree
+    add_index "playerstats_basketball", ["GameID"], name: "GameID", using: :btree
+    add_index "playerstats_basketball", ["LeagueID"], name: "LeagueID", using: :btree
+    add_index "playerstats_basketball", ["PlayerID"], name: "PlayerID", using: :btree
+    add_index "playerstats_basketball", ["TeamID"], name: "TeamID", using: :btree
 
-    connection.create_table "PlayerStats_Football", id: false, force: :cascade do |t|
+    create_table "PlayerStats_Football", id: false, force: :cascade do |t|
       t.integer  "GameID",                limit: 11,                                        null: false
       t.integer  "LeagueID",              limit: 11,                                        null: false
       t.integer  "TeamID",                limit: 4,                                        null: false
@@ -143,12 +133,12 @@ class CreateStatisticsDatabase < ActiveRecord::Migration
       t.datetime "ModifiedDate"
     end
 
-    connection.add_index "playerstats_football", ["GameID"], name: "GameID", using: :btree
-    connection.add_index "playerstats_football", ["LeagueID"], name: "LeagueID", using: :btree
-    connection.add_index "playerstats_football", ["PlayerID"], name: "PlayerID", using: :btree
-    connection.add_index "playerstats_football", ["TeamID"], name: "TeamID", using: :btree
+    add_index "playerstats_football", ["GameID"], name: "GameID", using: :btree
+    add_index "playerstats_football", ["LeagueID"], name: "LeagueID", using: :btree
+    add_index "playerstats_football", ["PlayerID"], name: "PlayerID", using: :btree
+    add_index "playerstats_football", ["TeamID"], name: "TeamID", using: :btree
 
-    connection.create_table "PlayerStats_Golf", id: false, force: :cascade do |t|
+    create_table "PlayerStats_Golf", id: false, force: :cascade do |t|
       t.integer  "GameID",       limit: 11,                  null: false
       t.integer  "LeagueID",     limit: 11,                  null: false
       t.integer  "PlayerID",     limit: 4,                  null: false
@@ -164,7 +154,7 @@ class CreateStatisticsDatabase < ActiveRecord::Migration
       t.datetime "ModifiedDate"
     end
 
-    connection.create_table "PlayerStats_Hockey", id: false, force: :cascade do |t|
+    create_table "PlayerStats_Hockey", id: false, force: :cascade do |t|
       t.integer  "GameID",         limit: 11,             null: false
       t.integer  "LeagueID",       limit: 11,             null: false
       t.integer  "TeamID",         limit: 4,             null: false
@@ -188,12 +178,12 @@ class CreateStatisticsDatabase < ActiveRecord::Migration
       t.datetime "ModifiedDate"
     end
 
-    connection.add_index "playerstats_hockey", ["GameID"], name: "GameID", using: :btree
-    connection.add_index "playerstats_hockey", ["LeagueID"], name: "LeagueID", using: :btree
-    connection.add_index "playerstats_hockey", ["PlayerID"], name: "PlayerID", using: :btree
-    connection.add_index "playerstats_hockey", ["TeamID"], name: "TeamID", using: :btree
+    add_index "playerstats_hockey", ["GameID"], name: "GameID", using: :btree
+    add_index "playerstats_hockey", ["LeagueID"], name: "LeagueID", using: :btree
+    add_index "playerstats_hockey", ["PlayerID"], name: "PlayerID", using: :btree
+    add_index "playerstats_hockey", ["TeamID"], name: "TeamID", using: :btree
 
-    connection.create_table "PlayerStats_Racing", id: false, force: :cascade do |t|
+    create_table "PlayerStats_Racing", id: false, force: :cascade do |t|
       t.integer  "GameID",       limit: 11,             null: false
       t.integer  "LeagueID",     limit: 11,             null: false
       t.integer  "PlayerID",     limit: 4,             null: false
@@ -206,7 +196,7 @@ class CreateStatisticsDatabase < ActiveRecord::Migration
       t.datetime "ModifiedDate"
     end
 
-    connection.create_table "PlayerStats_Soccer", id: false, force: :cascade do |t|
+    create_table "PlayerStats_Soccer", id: false, force: :cascade do |t|
       t.integer  "GameID",         limit: 11,             null: false
       t.integer  "LeagueID",       limit: 11,             null: false
       t.integer  "TeamID",         limit: 4,             null: false
@@ -225,12 +215,12 @@ class CreateStatisticsDatabase < ActiveRecord::Migration
       t.datetime "ModifiedDate"
     end
 
-    connection.add_index "playerstats_soccer", ["GameID"], name: "GameID", using: :btree
-    connection.add_index "playerstats_soccer", ["LeagueID"], name: "LeagueID", using: :btree
-    connection.add_index "playerstats_soccer", ["PlayerID"], name: "PlayerID", using: :btree
-    connection.add_index "playerstats_soccer", ["TeamID"], name: "TeamID", using: :btree
+    add_index "playerstats_soccer", ["GameID"], name: "GameID", using: :btree
+    add_index "playerstats_soccer", ["LeagueID"], name: "LeagueID", using: :btree
+    add_index "playerstats_soccer", ["PlayerID"], name: "PlayerID", using: :btree
+    add_index "playerstats_soccer", ["TeamID"], name: "TeamID", using: :btree
 
-    connection.create_table "Players", primary_key: "PlayerID", force: :cascade do |t|
+    create_table "Players", primary_key: "PlayerID", force: :cascade do |t|
       t.string   "PlayerName",   limit: 100
       t.integer  "TeamID",       limit: 4
       t.integer  "LeagueID",     limit: 11
@@ -239,9 +229,9 @@ class CreateStatisticsDatabase < ActiveRecord::Migration
       t.datetime "ModifiedDate",             null: false
     end
 
-    connection.add_index "players", ["TeamID"], name: "TeamID", using: :btree
+    add_index "players", ["TeamID"], name: "TeamID", using: :btree
 
-    connection.create_table "TeamStats_Baseball", id: false, force: :cascade do |t|
+    create_table "TeamStats_Baseball", id: false, force: :cascade do |t|
       t.integer  "GameID",       limit: 11,             null: false
       t.integer  "LeagueID",     limit: 11,             null: false
       t.integer  "TeamID",       limit: 4,             null: false
@@ -266,11 +256,11 @@ class CreateStatisticsDatabase < ActiveRecord::Migration
       t.datetime "ModifiedDate"
     end
 
-    connection.add_index "teamstats_baseball", ["GameID"], name: "GameID", using: :btree
-    connection.add_index "teamstats_baseball", ["LeagueID"], name: "LeagueID", using: :btree
-    connection.add_index "teamstats_baseball", ["TeamID"], name: "TeamID", using: :btree
+    add_index "teamstats_baseball", ["GameID"], name: "GameID", using: :btree
+    add_index "teamstats_baseball", ["LeagueID"], name: "LeagueID", using: :btree
+    add_index "teamstats_baseball", ["TeamID"], name: "TeamID", using: :btree
 
-    connection.create_table "TeamStats_Basketball", id: false, force: :cascade do |t|
+    create_table "TeamStats_Basketball", id: false, force: :cascade do |t|
       t.integer  "GameID",         limit: 11,             null: false
       t.integer  "LeagueID",       limit: 11,             null: false
       t.integer  "TeamID",         limit: 4,             null: false
@@ -305,11 +295,11 @@ class CreateStatisticsDatabase < ActiveRecord::Migration
       t.datetime "ModifiedDate"
     end
 
-    connection.add_index "teamstats_basketball", ["GameID"], name: "GameID", using: :btree
-    connection.add_index "teamstats_basketball", ["LeagueID"], name: "LeagueID", using: :btree
-    connection.add_index "teamstats_basketball", ["TeamID"], name: "TeamID", using: :btree
+    add_index "teamstats_basketball", ["GameID"], name: "GameID", using: :btree
+    add_index "teamstats_basketball", ["LeagueID"], name: "LeagueID", using: :btree
+    add_index "teamstats_basketball", ["TeamID"], name: "TeamID", using: :btree
 
-    connection.create_table "TeamStats_Football", id: false, force: :cascade do |t|
+    create_table "TeamStats_Football", id: false, force: :cascade do |t|
       t.integer  "GameID",            limit: 11,             null: false
       t.integer  "LeagueID",          limit: 11,             null: false
       t.integer  "TeamID",            limit: 4,             null: false
@@ -338,11 +328,11 @@ class CreateStatisticsDatabase < ActiveRecord::Migration
       t.datetime "ModifiedDate"
     end
 
-    connection.add_index "teamstats_football", ["GameID"], name: "GameID", using: :btree
-    connection.add_index "teamstats_football", ["LeagueID"], name: "LeagueID", using: :btree
-    connection.add_index "teamstats_football", ["TeamID"], name: "TeamID", using: :btree
+    add_index "teamstats_football", ["GameID"], name: "GameID", using: :btree
+    add_index "teamstats_football", ["LeagueID"], name: "LeagueID", using: :btree
+    add_index "teamstats_football", ["TeamID"], name: "TeamID", using: :btree
 
-    connection.create_table "TeamStats_Hockey", id: false, force: :cascade do |t|
+    create_table "TeamStats_Hockey", id: false, force: :cascade do |t|
       t.integer  "GameID",         limit: 11,             null: false
       t.integer  "LeagueID",       limit: 11,             null: false
       t.integer  "TeamID",         limit: 4,             null: false
@@ -369,11 +359,11 @@ class CreateStatisticsDatabase < ActiveRecord::Migration
       t.datetime "ModifiedDate"
     end
 
-    connection.add_index "teamstats_hockey", ["GameID"], name: "GameID", using: :btree
-    connection.add_index "teamstats_hockey", ["LeagueID"], name: "LeagueID", using: :btree
-    connection.add_index "teamstats_hockey", ["TeamID"], name: "TeamID", using: :btree
+    add_index "teamstats_hockey", ["GameID"], name: "GameID", using: :btree
+    add_index "teamstats_hockey", ["LeagueID"], name: "LeagueID", using: :btree
+    add_index "teamstats_hockey", ["TeamID"], name: "TeamID", using: :btree
 
-    connection.create_table "TeamStats_Soccer", id: false, force: :cascade do |t|
+    create_table "TeamStats_Soccer", id: false, force: :cascade do |t|
       t.integer  "GameID",       limit: 11,             null: false
       t.integer  "LeagueID",     limit: 11,             null: false
       t.integer  "TeamID",       limit: 4,             null: false
@@ -392,11 +382,11 @@ class CreateStatisticsDatabase < ActiveRecord::Migration
       t.datetime "ModifiedDate"
     end
 
-    connection.add_index "teamstats_soccer", ["GameID"], name: "GameID", using: :btree
-    connection.add_index "teamstats_soccer", ["LeagueID"], name: "LeagueID", using: :btree
-    connection.add_index "teamstats_soccer", ["TeamID"], name: "TeamID", using: :btree
+    add_index "teamstats_soccer", ["GameID"], name: "GameID", using: :btree
+    add_index "teamstats_soccer", ["LeagueID"], name: "LeagueID", using: :btree
+    add_index "teamstats_soccer", ["TeamID"], name: "TeamID", using: :btree
 
-    connection.create_table "Teams", primary_key: "TeamID", force: :cascade do |t|
+    create_table "Teams", primary_key: "TeamID", force: :cascade do |t|
       t.integer  "LeagueID",     limit: 11
       t.string   "TeamPrefix",   limit: 10
       t.string   "TeamName",     limit: 50
@@ -406,36 +396,33 @@ class CreateStatisticsDatabase < ActiveRecord::Migration
       t.datetime "ModifiedDate",             null: false
     end
 
-    connection.add_index "teams", ["LeagueID"], name: "LeagueID", using: :btree
+    add_index "teams", ["LeagueID"], name: "LeagueID", using: :btree
 
-    connection.add_foreign_key "PlayerStats_Baseball", "Games", column: "GameID", primary_key: "GameID", name: "GameIDBaseball"
-    connection.add_foreign_key "PlayerStats_Baseball", "Leagues", column: "LeagueID", primary_key: "LeagueID", name: "LeagueIDBaseball"
-    connection.add_foreign_key "PlayerStats_Baseball", "Players", column: "PlayerID", primary_key: "PlayerID", name: "PlayerIDBaseball"
-    connection.add_foreign_key "PlayerStats_Baseball", "Teams", column: "TeamID", primary_key: "TeamID", name: "TeamIDBaseball"
-    connection.add_foreign_key "PlayerStats_Basketball", "Leagues", column: "LeagueID", primary_key: "LeagueID", name: "LeagueIDBasketball"
-    connection.add_foreign_key "PlayerStats_Basketball", "Players", column: "PlayerID", primary_key: "PlayerID", name: "PlayerIDBasketball"
-    connection.add_foreign_key "PlayerStats_Basketball", "Teams", column: "TeamID", primary_key: "TeamID", name: "TeamIDBasketball"
-    connection.add_foreign_key "PlayerStats_Football", "Leagues", column: "LeagueID", primary_key: "LeagueID", name: "LeagueIDFootball"
-    connection.add_foreign_key "PlayerStats_Football", "Players", column: "PlayerID", primary_key: "PlayerID", name: "PlayerIDFootball"
-    connection.add_foreign_key "PlayerStats_Football", "Teams", column: "TeamID", primary_key: "TeamID", name: "TeamIDFootball"
-    connection.add_foreign_key "PlayerStats_Hockey", "Leagues", column: "LeagueID", primary_key: "LeagueID", name: "LeagueIDHockey"
-    connection.add_foreign_key "PlayerStats_Hockey", "Players", column: "PlayerID", primary_key: "PlayerID", name: "PlayerIDHockey"
-    connection.add_foreign_key "PlayerStats_Hockey", "Teams", column: "TeamID", primary_key: "TeamID", name: "TeamIDHockey"
-    connection.add_foreign_key "PlayerStats_Soccer", "Leagues", column: "LeagueID", primary_key: "LeagueID", name: "LeagueIDSoccer"
-    connection.add_foreign_key "PlayerStats_Soccer", "Players", column: "PlayerID", primary_key: "PlayerID", name: "PlayerIDSoccer"
-    connection.add_foreign_key "PlayerStats_Soccer", "Teams", column: "TeamID", primary_key: "TeamID", name: "TeamIDSoccer"
-    connection.add_foreign_key "TeamStats_Baseball", "Leagues", column: "LeagueID", primary_key: "LeagueID", name: "LeagueIDBaseballTeam"
-    connection.add_foreign_key "TeamStats_Baseball", "Teams", column: "TeamID", primary_key: "TeamID", name: "TeamIDBaseballTeam"
-    connection.add_foreign_key "TeamStats_Basketball", "Leagues", column: "LeagueID", primary_key: "LeagueID", name: "LeagueIDBasketballTeam"
-    connection.add_foreign_key "TeamStats_Basketball", "Teams", column: "TeamID", primary_key: "TeamID", name: "TeamIDBasketballTeam"
-    connection.add_foreign_key "TeamStats_Football", "Leagues", column: "LeagueID", primary_key: "LeagueID", name: "LeagueIDFootballTeam"
-    connection.add_foreign_key "TeamStats_Football", "Teams", column: "TeamID", primary_key: "TeamID", name: "TeamIDFootballTeam"
-    connection.add_foreign_key "TeamStats_Hockey", "Leagues", column: "LeagueID", primary_key: "LeagueID", name: "LeagueIDHockeyTeam"
-    connection.add_foreign_key "TeamStats_Hockey", "Teams", column: "TeamID", primary_key: "TeamID", name: "TeamIDHockeyTeam"
-    connection.add_foreign_key "TeamStats_Soccer", "Leagues", column: "LeagueID", primary_key: "LeagueID", name: "LeagueIDSoccerTeam"
-    connection.add_foreign_key "TeamStats_Soccer", "Teams", column: "TeamID", primary_key: "TeamID", name: "TeamIDSoccerTeam"
-
-
-    connection.execute 'SET FOREIGN_KEY_CHECKS=1;'
+    add_foreign_key "PlayerStats_Baseball", "Games", column: "GameID", primary_key: "GameID", name: "GameIDBaseball"
+    add_foreign_key "PlayerStats_Baseball", "Leagues", column: "LeagueID", primary_key: "LeagueID", name: "LeagueIDBaseball"
+    add_foreign_key "PlayerStats_Baseball", "Players", column: "PlayerID", primary_key: "PlayerID", name: "PlayerIDBaseball"
+    add_foreign_key "PlayerStats_Baseball", "Teams", column: "TeamID", primary_key: "TeamID", name: "TeamIDBaseball"
+    add_foreign_key "PlayerStats_Basketball", "Leagues", column: "LeagueID", primary_key: "LeagueID", name: "LeagueIDBasketball"
+    add_foreign_key "PlayerStats_Basketball", "Players", column: "PlayerID", primary_key: "PlayerID", name: "PlayerIDBasketball"
+    add_foreign_key "PlayerStats_Basketball", "Teams", column: "TeamID", primary_key: "TeamID", name: "TeamIDBasketball"
+    add_foreign_key "PlayerStats_Football", "Leagues", column: "LeagueID", primary_key: "LeagueID", name: "LeagueIDFootball"
+    add_foreign_key "PlayerStats_Football", "Players", column: "PlayerID", primary_key: "PlayerID", name: "PlayerIDFootball"
+    add_foreign_key "PlayerStats_Football", "Teams", column: "TeamID", primary_key: "TeamID", name: "TeamIDFootball"
+    add_foreign_key "PlayerStats_Hockey", "Leagues", column: "LeagueID", primary_key: "LeagueID", name: "LeagueIDHockey"
+    add_foreign_key "PlayerStats_Hockey", "Players", column: "PlayerID", primary_key: "PlayerID", name: "PlayerIDHockey"
+    add_foreign_key "PlayerStats_Hockey", "Teams", column: "TeamID", primary_key: "TeamID", name: "TeamIDHockey"
+    add_foreign_key "PlayerStats_Soccer", "Leagues", column: "LeagueID", primary_key: "LeagueID", name: "LeagueIDSoccer"
+    add_foreign_key "PlayerStats_Soccer", "Players", column: "PlayerID", primary_key: "PlayerID", name: "PlayerIDSoccer"
+    add_foreign_key "PlayerStats_Soccer", "Teams", column: "TeamID", primary_key: "TeamID", name: "TeamIDSoccer"
+    add_foreign_key "TeamStats_Baseball", "Leagues", column: "LeagueID", primary_key: "LeagueID", name: "LeagueIDBaseballTeam"
+    add_foreign_key "TeamStats_Baseball", "Teams", column: "TeamID", primary_key: "TeamID", name: "TeamIDBaseballTeam"
+    add_foreign_key "TeamStats_Basketball", "Leagues", column: "LeagueID", primary_key: "LeagueID", name: "LeagueIDBasketballTeam"
+    add_foreign_key "TeamStats_Basketball", "Teams", column: "TeamID", primary_key: "TeamID", name: "TeamIDBasketballTeam"
+    add_foreign_key "TeamStats_Football", "Leagues", column: "LeagueID", primary_key: "LeagueID", name: "LeagueIDFootballTeam"
+    add_foreign_key "TeamStats_Football", "Teams", column: "TeamID", primary_key: "TeamID", name: "TeamIDFootballTeam"
+    add_foreign_key "TeamStats_Hockey", "Leagues", column: "LeagueID", primary_key: "LeagueID", name: "LeagueIDHockeyTeam"
+    add_foreign_key "TeamStats_Hockey", "Teams", column: "TeamID", primary_key: "TeamID", name: "TeamIDHockeyTeam"
+    add_foreign_key "TeamStats_Soccer", "Leagues", column: "LeagueID", primary_key: "LeagueID", name: "LeagueIDSoccerTeam"
+    add_foreign_key "TeamStats_Soccer", "Teams", column: "TeamID", primary_key: "TeamID", name: "TeamIDSoccerTeam"
   end
 end

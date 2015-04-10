@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150409131645) do
+ActiveRecord::Schema.define(version: 20150410161713) do
 
   create_table "Leagues", primary_key: "LeagueID", force: :cascade do |t|
     t.string  "LeagueName", limit: 50
@@ -397,6 +397,16 @@ ActiveRecord::Schema.define(version: 20150409131645) do
   end
 
   add_index "players", ["TeamID"], name: "TeamID", using: :btree
+
+  create_table "tasks", force: :cascade do |t|
+    t.string   "name",       limit: 255
+    t.integer  "interval",   limit: 4,   default: 3600
+    t.integer  "pid",        limit: 4
+    t.integer  "progress",   limit: 4
+    t.string   "status",     limit: 255, default: "0"
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
+  end
 
   create_table "teams", primary_key: "TeamID", force: :cascade do |t|
     t.integer  "LeagueID",     limit: 4
