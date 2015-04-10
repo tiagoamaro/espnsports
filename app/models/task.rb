@@ -4,7 +4,7 @@
 #
 #  id          :integer          not null, primary key
 #  name        :string(255)
-#  interval    :integer          default(3600)
+#  interval    :integer          default(60)
 #  pid         :integer
 #  league_name :string(255)      default("NBA")
 #  scraper     :string(255)      default("SportsScraper")

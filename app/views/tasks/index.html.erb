@@ -12,6 +12,7 @@
       <th>ID</th>
       <th>Interval (seconds)</th>
       <th>League</th>
+      <th>status</th>
       <th>PID</th>
       <th>Actions</th>
     </tr>
@@ -20,13 +21,14 @@
   <tbody>
     <% @tasks.each do |task| %>
       <tr>
-        <td><%= task.id %></td>
+        <td><%= link_to task.id, edit_task_path(task) %></td>
         <td><%= task.interval %></td>
         <td><%= task.league_name %></td>
+        <td><%= task.status %></td>
         <td><%= task.pid %></td>
         <td>
-          <a href="#" class="btn btn-primary">Start</a>
-          <a href="#" class="btn btn-warning">Stop</a>
+          <%= link_to 'Start', start_task_path(task), method: :put, class: 'btn btn-primary' %>
+          <%= link_to 'Stop', stop_task_path(task), method: :put, class: 'btn btn-warning' %>
           <%= link_to 'Delete', task_path(task), method: :delete, class: 'btn btn-danger', data: { confirm: "Are you sure?" } %>
         </td>
       </tr>

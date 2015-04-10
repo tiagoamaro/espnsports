@@ -1,5 +1,5 @@
 class TasksController < ApplicationController
-  before_action :set_task, only: [:show, :edit, :update, :destroy]
+  before_action :set_task, only: [:show, :edit, :update, :destroy, :start, :stop]
 
   # GET /tasks
   def index
@@ -16,24 +16,40 @@ class TasksController < ApplicationController
     @task = Task.new(task_params)
 
     if @task.save
-      redirect_to action: :index
+      redirect_to tasks_url, notice: 'Task was created'
     else
       render :new
     end
   end
 
+  # GET /tasks/1
+  def edit
+  end
+
   # PATCH/PUT /tasks/1
   def update
     if @task.update(task_params)
-      redirect_to @task, notice: 'Task was successfully updated.'
+      redirect_to tasks_url, notice: 'Task was successfully updated'
     else
       render :edit
     end
   end
 
+  # PUT /tasks/1/start
+  def start
+    @task.run!
+    redirect_to tasks_url, notice: 'Task has started'
+  end
+
+  # PUT /tasks/1/start
+  def stop
+    @task.stop!
+    redirect_to tasks_url, notice: 'Task has stopped'
+  end
+
   def destroy
     @task.destroy
-    redirect_to action: :index
+    redirect_to tasks_url, notice: 'Task was destroyed'
   end
 
   private

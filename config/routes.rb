@@ -1,5 +1,10 @@
 Rails.application.routes.draw do
-  resources :tasks
+  resources :tasks do
+    member do
+      put 'start'
+      put 'stop'
+    end
+  end
 
   root 'tasks#index'
 
