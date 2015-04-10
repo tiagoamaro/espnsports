@@ -19,10 +19,12 @@ class Task < ActiveRecord::Base
   validates :interval, numericality: { only_integer: true, greater_than: 0 }
   validates :league_name, presence: true
 
+  before_destroy :stop!
+
   def stop!
     begin
-      update(pid: nil)
       Process.kill(9, pid)
+      update(pid: nil)
     rescue => exception
       logger.info exception.backtrace
     ensure
