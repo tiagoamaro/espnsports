@@ -4,7 +4,7 @@ class CreateTasks < ActiveRecord::Migration
       t.string :name
       t.integer :interval, default: 3600
       t.integer :pid
-      t.integer :progress
+      t.string :progress
       t.string :status, default: Task.statuses[:brand_new]
 
       t.timestamps null: false

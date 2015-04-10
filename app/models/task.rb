@@ -6,7 +6,7 @@
 #  name       :string(255)
 #  interval   :integer          default(3600)
 #  pid        :integer
-#  progress   :integer
+#  progress   :string(255)
 #  status     :string(255)      default("0")
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
@@ -16,7 +16,7 @@ class Task < ActiveRecord::Base
   enum status: { brand_new: 0, running: 1, done: 2, stopped: 3, failed: 4 }
 
   def update_status!
-    if !self.running? && self.status == RUNNING
+    if !self.running?
       self.update_attributes(status: STOPPED, progress: '')
     end
   end
@@ -31,20 +31,8 @@ class Task < ActiveRecord::Base
     end
   end
 
-  def resume!
-    run!()
-  end
-
-  def start!
-    run!()
-  end
-
-  def restart!
-    run!()
-  end
-
   def stop!
-    if self.running? && self.status = RUNNING
+    if self.running?
       begin
         Process.kill 9, self.pid.to_i
         self.status = STOPPED
