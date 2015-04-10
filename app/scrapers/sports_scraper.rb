@@ -860,7 +860,7 @@ class SportsScraper
       #}
       ## main db connection
       ## 
-      rails_db_config = Rails.application.config.database_configuration['statistics']
+      rails_db_config = Rails.application.config.database_configuration[Rails.env]
       @host = rails_db_config['host']
       @username = rails_db_config['username']
       @pass = rails_db_config['password']
