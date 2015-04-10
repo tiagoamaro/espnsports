@@ -402,10 +402,11 @@ ActiveRecord::Schema.define(version: 20150410161713) do
     t.string   "name",       limit: 255
     t.integer  "interval",   limit: 4,   default: 3600
     t.integer  "pid",        limit: 4
+    t.string   "scraper",    limit: 255, default: "SportsScraper"
     t.string   "progress",   limit: 255
     t.string   "status",     limit: 255, default: "0"
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
+    t.datetime "created_at",                                       null: false
+    t.datetime "updated_at",                                       null: false
   end
 
   create_table "teams", primary_key: "TeamID", force: :cascade do |t|

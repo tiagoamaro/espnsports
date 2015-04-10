@@ -6,6 +6,7 @@
 #  name       :string(255)
 #  interval   :integer          default(3600)
 #  pid        :integer
+#  scraper    :string(255)      default("SportsScraper")
 #  progress   :string(255)
 #  status     :string(255)      default("0")
 #  created_at :datetime         not null
