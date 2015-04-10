@@ -37,8 +37,9 @@ gem 'mechanize'
 gem 'nokogiri'
 
 group :development, :test do
-  gem 'pry'
+  gem 'annotate', '~> 2.6.6'
 
+  gem 'pry'
   gem 'better_errors'
   gem 'binding_of_caller'
 

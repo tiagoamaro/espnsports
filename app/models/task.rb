@@ -1,9 +1,19 @@
+# == Schema Information
+#
+# Table name: tasks
+#
+#  id         :integer          not null, primary key
+#  name       :string(255)
+#  interval   :integer          default(3600)
+#  pid        :integer
+#  progress   :integer
+#  status     :string(255)      default("0")
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+
 class Task < ActiveRecord::Base
   enum status: { brand_new: 0, running: 1, done: 2, stopped: 3, failed: 4 }
-
-  def set_status
-    self.status = NEW
-  end
 
   def update_status!
     if !self.running? && self.status == RUNNING
