@@ -90,6 +90,7 @@ GEM
     minitest (5.5.1)
     multi_json (1.11.0)
     mysql (2.9.1)
+    mysql2 (0.3.18)
     net-http-digest_auth (1.4)
     net-http-persistent (2.9.4)
     nokogiri (1.6.6.2)
@@ -169,6 +170,7 @@ DEPENDENCIES
   jquery-rails
   mechanize
   mysql
+  mysql2
   nokogiri
   pry
   rails (= 4.2.1)
