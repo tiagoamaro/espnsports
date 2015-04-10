@@ -16,23 +16,27 @@ class Task < ActiveRecord::Base
   enum status: { stopped: 0, running: 1 }
 
   def stop!
+    return if stopped?
+
     begin
-      Process.kill('TERM', pid) if running?
+      Process.kill(9, pid)
     rescue => exception
-      exception.backtrace.each { |line| logger.info(line) }
+      logger.info exception.backtrace
     ensure
       stopped!
     end
   end
 
   def run!(league_name = 'NBA')
+    return if running?
+
     process = Spawnling.new(method: :fork) do
       running!
 
       begin
         scraper.constantize.new(league_name).start
       rescue => exception
-        exception.backtrace.each { |line| logger.info(line) }
+        logger.info exception.backtrace
       ensure
         stopped!
       end
