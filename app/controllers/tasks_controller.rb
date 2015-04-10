@@ -6,6 +6,22 @@ class TasksController < ApplicationController
     @tasks = Task.all
   end
 
+  # /tasks/new
+  def new
+    @task = Task.new
+  end
+
+  # POST /tasks
+  def create
+    @task = Task.new(task_params)
+
+    if @task.save
+      redirect_to action: :index
+    else
+      render :new
+    end
+  end
+
   # PATCH/PUT /tasks/1
   def update
     if @task.update(task_params)
@@ -13,6 +29,11 @@ class TasksController < ApplicationController
     else
       render :edit
     end
+  end
+
+  def destroy
+    @task.destroy
+    redirect_to action: :index
   end
 
   private
@@ -23,6 +44,6 @@ class TasksController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def task_params
-      params.require(:task).permit(:name, :interval, :pid, :progress, :status, :last_exec)
+      params.require(:task).permit(:league_name, :interval)
     end
 end

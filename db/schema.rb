@@ -399,13 +399,14 @@ ActiveRecord::Schema.define(version: 20150410161713) do
   add_index "players", ["TeamID"], name: "TeamID", using: :btree
 
   create_table "tasks", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.integer  "interval",   limit: 4,   default: 3600
-    t.integer  "pid",        limit: 4
-    t.string   "scraper",    limit: 255, default: "SportsScraper"
-    t.integer  "status",     limit: 4,   default: 0
-    t.datetime "created_at",                                       null: false
-    t.datetime "updated_at",                                       null: false
+    t.string   "name",        limit: 255
+    t.integer  "interval",    limit: 4,   default: 3600
+    t.integer  "pid",         limit: 4
+    t.string   "league_name", limit: 255, default: "NBA"
+    t.string   "scraper",     limit: 255, default: "SportsScraper"
+    t.integer  "status",      limit: 4,   default: 0
+    t.datetime "created_at",                                        null: false
+    t.datetime "updated_at",                                        null: false
   end
 
   create_table "teams", primary_key: "TeamID", force: :cascade do |t|

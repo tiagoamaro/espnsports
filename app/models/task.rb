@@ -2,20 +2,22 @@
 #
 # Table name: tasks
 #
-#  id         :integer          not null, primary key
-#  name       :string(255)
-#  interval   :integer          default(3600)
-#  pid        :integer
-#  scraper    :string(255)      default("SportsScraper")
-#  status     :integer          default(0)
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id          :integer          not null, primary key
+#  name        :string(255)
+#  interval    :integer          default(3600)
+#  pid         :integer
+#  league_name :string(255)      default("NBA")
+#  scraper     :string(255)      default("SportsScraper")
+#  status      :integer          default(0)
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
 #
 
 class Task < ActiveRecord::Base
   enum status: { stopped: 0, running: 1 }
 
   validates :interval, numericality: { only_integer: true, greater_than: 0 }
+  validates :league_name, presence: true
 
   def stop!
     begin
@@ -28,7 +30,7 @@ class Task < ActiveRecord::Base
     end
   end
 
-  def run!(league_name = 'NBA')
+  def run!
     process = Spawnling.new(method: :fork) do
       running!
 

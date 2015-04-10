@@ -38,6 +38,9 @@ gem 'mechanize'
 gem 'nokogiri'
 gem 'spawnling'
 
+gem 'bootstrap-sass', '~> 3.3.4'
+gem 'simple_form'
+
 group :development, :test do
   gem 'annotate', '~> 2.6.6'
 
