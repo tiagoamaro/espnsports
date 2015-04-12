@@ -37,7 +37,7 @@ class TasksController < ApplicationController
 
   # PUT /tasks/1/start
   def start
-    @task.run!
+    Spawnling.new { @task.run! }
     redirect_to tasks_url, notice: 'Task has started'
   end
 

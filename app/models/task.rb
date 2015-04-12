@@ -33,7 +33,7 @@ class Task < ActiveRecord::Base
   end
 
   def run!
-    process = Spawnling.new(method: :fork) do
+    process = Spawnling.new do
       running!
 
       while self.reload.running?
