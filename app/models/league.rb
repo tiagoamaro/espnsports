@@ -9,5 +9,6 @@
 #
 
 class League < ActiveRecord::Base
+  self.table_name = 'Leagues'
   self.primary_key = 'LeagueID'
 end
